@@ -1,95 +1,50 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import {
+  useCallback,
+  useState
+} from 'react';
+import Icon from '@mui/material/Icon';
+import Cards from '@/components/cards';
+import Backgroud from '@/components/backgroud';
+import StopIcon from '@mui/icons-material/Stop';
+import Tooltip from '@mui/material/Tooltip';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-export default function Home() {
+import '@/styles/styles.scss';
+import styles from '@/app/stye/style.module.scss';
+
+export default function App() {
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  let audioElement: HTMLAudioElement | null = null;
+
+  const toggleAudio = () => {
+    if (audioElement) {
+      isPlaying ? audioElement.pause() : audioElement.play();
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const getIconButton = useCallback(() => {
+    return (
+      <Icon>
+        {isPlaying ? <StopIcon /> : <PlayArrowIcon />}
+      </Icon>
+    )
+  }, [isPlaying]);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <Backgroud>
+      <div className={styles.container}>
+        <Tooltip title={isPlaying ? "Stop Music" : "Play Music"} arrow>
+          <button onClick={toggleAudio} className={styles.btnAudio}>
+            {getIconButton()}
+          </button>
+        </Tooltip>
+
+        <Cards />
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <audio ref={(element) => { audioElement = element; }} src="/yugioh.mp3" />
+    </Backgroud>
   );
 }
